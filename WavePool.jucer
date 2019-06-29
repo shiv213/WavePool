@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="sXwYRz" name="WavePool" projectType="audioplug" jucerVersion="5.4.3"
-              pluginCharacteristicsValue="pluginEditorRequiresKeys,pluginIsMidiEffectPlugin,pluginIsSynth,pluginProducesMidiOut,pluginWantsMidiIn"
-              pluginVST3Category="Generator,Instrument,Reverb,Synth" companyName="WavePool">
-  <MAINGROUP id="IXSLEx" name="WavePool">
-    <GROUP id="{A3BF8DAA-8BEE-7536-CE36-2E0104A3B83E}" name="Source">
-      <FILE id="Pu7NUH" name="PluginProcessor.cpp" compile="1" resource="0"
+<JUCERPROJECT id="PGTqJr" name="WavePool" projectType="audioplug" jucerVersion="5.4.3"
+              pluginCharacteristicsValue="pluginIsMidiEffectPlugin,pluginIsSynth,pluginProducesMidiOut,pluginWantsMidiIn"
+              companyName="WavePool" pluginVST3Category="Generator,Instrument,Synth">
+  <MAINGROUP id="uThmT5" name="WavePool">
+    <GROUP id="{6418255C-C8CB-7DDE-D66A-5E6868450B26}" name="Source">
+      <FILE id="vAjVIb" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
-      <FILE id="rloBe6" name="PluginProcessor.h" compile="0" resource="0"
+      <FILE id="f0Gmyu" name="PluginProcessor.h" compile="0" resource="0"
             file="Source/PluginProcessor.h"/>
-      <FILE id="BXYpHL" name="PluginEditor.cpp" compile="1" resource="0"
+      <FILE id="Wa9FDo" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
-      <FILE id="oxDNH4" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      <FILE id="Xkw8K3" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>

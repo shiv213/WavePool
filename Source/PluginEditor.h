@@ -31,5 +31,7 @@ private:
     // access the processor object that created it.
     WavePoolAudioProcessor& processor;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WavePoolAudioProcessorEditor)
+	Slider midiVolume;
+    
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WavePoolAudioProcessorEditor)
 };
