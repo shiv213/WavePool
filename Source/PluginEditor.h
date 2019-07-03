@@ -1,9 +1,9 @@
 /*
   ==============================================================================
 
-    This file was auto-generated!
+	This file was auto-generated!
 
-    It contains the basic framework code for a JUCE plugin editor.
+	It contains the basic framework code for a JUCE plugin editor.
 
   ==============================================================================
 */
@@ -16,22 +16,27 @@
 //==============================================================================
 /**
 */
-class WavePoolAudioProcessorEditor  : public AudioProcessorEditor
+class WavePoolAudioProcessorEditor : public AudioProcessorEditor, private Slider::Listener, private TextButton::Listener
 {
 public:
-    WavePoolAudioProcessorEditor (WavePoolAudioProcessor&);
-    ~WavePoolAudioProcessorEditor();
+	WavePoolAudioProcessorEditor(WavePoolAudioProcessor&);
+	~WavePoolAudioProcessorEditor();
 
-    //==============================================================================
-    void paint (Graphics&) override;
-    void resized() override;
+	//==============================================================================
+	void paint(Graphics&) override;
+	void resized() override;
+
+	void recordPressed(TextButton* button);
 
 private:
-    // This reference is provided as a quick way for your editor to
-    // access the processor object that created it.
-    WavePoolAudioProcessor& processor;
+	void sliderValueChanged(Slider* slider) override;
+	void buttonClicked(Button* button) override;
+	// This reference is provided as a quick way for your editor to
+	// access the processor object that created it.
+	WavePoolAudioProcessor& processor;
 
 	Slider midiVolume;
-    
-	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WavePoolAudioProcessorEditor)
+	TextButton recordButton;
+
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(WavePoolAudioProcessorEditor)
 };

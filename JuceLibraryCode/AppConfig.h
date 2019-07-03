@@ -344,7 +344,7 @@
  #define JucePlugin_ManufacturerCode       0x4d616e75 // 'Manu'
 #endif
 #ifndef  JucePlugin_PluginCode
- #define JucePlugin_PluginCode             0x50677471 // 'Pgtq'
+ #define JucePlugin_PluginCode             0x4261367a // 'Ba6z'
 #endif
 #ifndef  JucePlugin_IsSynth
  #define JucePlugin_IsSynth                1
@@ -356,10 +356,10 @@
  #define JucePlugin_ProducesMidiOutput     1
 #endif
 #ifndef  JucePlugin_IsMidiEffect
- #define JucePlugin_IsMidiEffect           1
+ #define JucePlugin_IsMidiEffect           0
 #endif
 #ifndef  JucePlugin_EditorRequiresKeyboardFocus
- #define JucePlugin_EditorRequiresKeyboardFocus  0
+ #define JucePlugin_EditorRequiresKeyboardFocus  1
 #endif
 #ifndef  JucePlugin_Version
  #define JucePlugin_Version                1.0.0
@@ -380,7 +380,7 @@
  #define JucePlugin_Vst3Category           "Instrument|Generator|Synth"
 #endif
 #ifndef  JucePlugin_AUMainType
- #define JucePlugin_AUMainType             'aumi'
+ #define JucePlugin_AUMainType             'aumu'
 #endif
 #ifndef  JucePlugin_AUSubType
  #define JucePlugin_AUSubType              JucePlugin_PluginCode

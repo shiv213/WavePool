@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="PGTqJr" name="WavePool" projectType="audioplug" jucerVersion="5.4.3"
-              pluginCharacteristicsValue="pluginIsMidiEffectPlugin,pluginIsSynth,pluginProducesMidiOut,pluginWantsMidiIn"
-              companyName="WavePool" pluginVST3Category="Generator,Instrument,Synth">
-  <MAINGROUP id="uThmT5" name="WavePool">
-    <GROUP id="{6418255C-C8CB-7DDE-D66A-5E6868450B26}" name="Source">
-      <FILE id="vAjVIb" name="PluginProcessor.cpp" compile="1" resource="0"
+<JUCERPROJECT id="ba6ZRF" name="WavePool" projectType="audioplug" jucerVersion="5.4.3"
+              companyName="WavePool" pluginCharacteristicsValue="pluginEditorRequiresKeys,pluginIsSynth,pluginProducesMidiOut,pluginWantsMidiIn"
+              pluginVST3Category="Generator,Instrument,Synth">
+  <MAINGROUP id="TdqkWd" name="WavePool">
+    <GROUP id="{E23C8AA2-25BB-AAD6-B24D-72B34B22C8F3}" name="Source">
+      <FILE id="uZ8Y47" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
-      <FILE id="f0Gmyu" name="PluginProcessor.h" compile="0" resource="0"
+      <FILE id="uVdQHx" name="PluginProcessor.h" compile="0" resource="0"
             file="Source/PluginProcessor.h"/>
-      <FILE id="Wa9FDo" name="PluginEditor.cpp" compile="1" resource="0"
+      <FILE id="Ts8ltl" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
-      <FILE id="Xkw8K3" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      <FILE id="sPE5Rk" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      <FILE id="MumrP9" name="SerialClass.h" compile="0" resource="0" file="Source/SerialClass.h"/>
+      <FILE id="b6zZk5" name="Serial.cpp" compile="1" resource="0" file="Source/Serial.cpp"/>
+      <FILE id="j8NpWg" name="GUI.h" compile="0" resource="0" file="Source/GUI.h"/>
+      <FILE id="jopUyG" name="GUI.cpp" compile="1" resource="0" file="Source/GUI.cpp"/>
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
@@ -56,7 +60,7 @@
     <MODULE id="juce_opengl" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
   </MODULES>
   <LIVE_SETTINGS>
-    <WINDOWS/>
+    <WINDOWS buildEnabled="0"/>
   </LIVE_SETTINGS>
   <JUCEOPTIONS JUCE_VST3_CAN_REPLACE_VST2="0" JUCE_STRICT_REFCOUNTEDPOINTER="1"/>
 </JUCERPROJECT>
