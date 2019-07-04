@@ -55,8 +55,13 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 	float noteOnVel;
+	int menuChoice;
+	float thresh = 0.0f;
+	float mix = 0.0f;
 
 private:
+	//AudioParameterFloat* gain;
+	AudioParameterChoice* mode;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WavePoolAudioProcessor)
 };

@@ -16,9 +16,8 @@
 //==============================================================================
 /**
 */
-class WavePoolAudioProcessorEditor : public AudioProcessorEditor, private Slider::Listener, private TextButton::Listener,
 
-	public MidiInputCallback, public MidiKeyboardStateListener//, public Component
+class WavePoolAudioProcessorEditor : public AudioProcessorEditor, private Slider::Listener, private TextButton::Listener, private ComboBox::Listener, 	public MidiInputCallback, public MidiKeyboardStateListener//, public Component
 {
 public:
 	WavePoolAudioProcessorEditor(WavePoolAudioProcessor&);
@@ -146,12 +145,16 @@ public:
 private:
 	void sliderValueChanged(Slider* slider) override;
 	void buttonClicked(Button* button) override;
+	void comboBoxChanged(ComboBox* changedBox) override;
 	// This reference is provided as a quick way for your editor to
 	// access the processor object that created it.
 	WavePoolAudioProcessor& processor;
 
 	Slider midiVolume;
 	TextButton recordButton;
+	ComboBox mode;
+	Slider Threshold;
+	Slider Mix;
 
 	// Handling MIDI Events Variables
 	AudioDeviceManager deviceManager;           // [1] 
