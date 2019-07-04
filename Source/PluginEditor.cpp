@@ -28,8 +28,15 @@ int col = 0;
 
 //==============================================================================
 WavePoolAudioProcessorEditor::WavePoolAudioProcessorEditor(WavePoolAudioProcessor& p)
-	: AudioProcessorEditor(&p), processor(p)
+	: AudioProcessorEditor(&p), processor(p), 
+	
+	// Initialize handling MIDI Events  
+	keyboardComponent(keyboardState, MidiKeyboardComponent::horizontalKeyboard),
+	startTime(Time::getMillisecondCounterHiRes() * 0.001)
+
+	// Start
 {
+
 	// Make sure that before the constructor has finished, you've set the
 	// editor's size to whatever you need it to be.
 	setSize(600, 400);
@@ -50,7 +57,47 @@ WavePoolAudioProcessorEditor::WavePoolAudioProcessorEditor(WavePoolAudioProcesso
 	recordButton.setButtonText("Record");
 	recordButton.addListener(this);
 	addAndMakeVisible(&recordButton);
+	
+	// Get list of MIDI inputs
+	setOpaque(true);
 
+	addAndMakeVisible(midiInputListLabel);
+	midiInputListLabel.setText("MIDI Input:", dontSendNotification);
+	midiInputListLabel.attachToComponent(&midiInputList, true);
+
+	addAndMakeVisible(midiInputList);
+	midiInputList.setTextWhenNoChoicesAvailable("No MIDI Inputs Enabled");
+	auto midiInputs = MidiInput::getDevices();
+	midiInputList.addItemList(midiInputs, 1);
+	midiInputList.onChange = [this] { setMidiInput(midiInputList.getSelectedItemIndex()); };
+
+	// find the first enabled device and use that by default
+	for (auto midiInput : midiInputs)
+	{
+		if (deviceManager.isMidiInputEnabled(midiInput))
+		{
+			setMidiInput(midiInputs.indexOf(midiInput));
+			break;
+		}
+	}
+
+	// if no enabled devices were found just use the first one in the list
+	if (midiInputList.getSelectedId() == 0)
+		setMidiInput(0);
+
+	addAndMakeVisible(keyboardComponent);
+	keyboardState.addListener(this);
+
+	addAndMakeVisible(midiMessagesBox);
+	midiMessagesBox.setMultiLine(true);
+	midiMessagesBox.setReturnKeyStartsNewLine(true);
+	midiMessagesBox.setReadOnly(true);
+	midiMessagesBox.setScrollbarsShown(true);
+	midiMessagesBox.setCaretVisible(false);
+	midiMessagesBox.setPopupMenuEnabled(true);
+	midiMessagesBox.setColour(TextEditor::backgroundColourId, Colour(0x32ffffff));
+	midiMessagesBox.setColour(TextEditor::outlineColourId, Colour(0x1c000000));
+	midiMessagesBox.setColour(TextEditor::shadowColourId, Colour(0x16000000));
 	addAndMakeVisible(&Threshold);
 	Threshold.setRange(0.0f, 1.0f, 0.001);
 	Threshold.addListener(this);
@@ -66,11 +113,13 @@ WavePoolAudioProcessorEditor::WavePoolAudioProcessorEditor(WavePoolAudioProcesso
 	mode.setSelectedId(1);
 	mode.addListener(this);
 
+
 }
 
 WavePoolAudioProcessorEditor::~WavePoolAudioProcessorEditor()
 {
 }
+
 
 //==============================================================================
 void WavePoolAudioProcessorEditor::paint(Graphics& g)
@@ -112,6 +161,11 @@ void WavePoolAudioProcessorEditor::resized() {
 	Threshold.setBounds(50, 100, 200, 50);
 	Mix.setBounds(50, 150, 200, 50);
 
+	auto area = getLocalBounds();
+
+	midiInputList.setBounds(area.removeFromTop(36).removeFromRight(getWidth() - 150).reduced(8));
+	keyboardComponent.setBounds(area.removeFromTop(80).reduced(8));
+	midiMessagesBox.setBounds(area.reduced(8));
 }
 
 void WavePoolAudioProcessorEditor::buttonClicked(Button* button) {
@@ -159,3 +213,4 @@ void WavePoolAudioProcessorEditor::sliderValueChanged(Slider* slider)
 void WavePoolAudioProcessorEditor::comboBoxChanged(ComboBox* changedBox) {
 	processor.menuChoice = changedBox->getSelectedId();
 }
+
