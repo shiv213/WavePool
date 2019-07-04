@@ -10,7 +10,7 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
-
+//juce::StringArray modes = { "Auto", "Sine Wave" };
 //==============================================================================
 WavePoolAudioProcessor::WavePoolAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -24,6 +24,8 @@ WavePoolAudioProcessor::WavePoolAudioProcessor()
 	)
 #endif
 {
+	//addParameter(gain = new AudioParameterFloat("gain", "Gain", 0.0f, 1.0f, 0.5f));
+	//addParameter(mode = new AudioParameterChoice("mode", "Mode", modes, 0));
 }
 
 WavePoolAudioProcessor::~WavePoolAudioProcessor()
@@ -129,56 +131,60 @@ bool WavePoolAudioProcessor::isBusesLayoutSupported(const BusesLayout& layouts) 
 }
 #endif
 
-void WavePoolAudioProcessor::processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
-{
-	//ScopedNoDenormals noDenormals;
-	//auto totalNumInputChannels = getTotalNumInputChannels();
-	//auto totalNumOutputChannels = getTotalNumOutputChannels();
+void WavePoolAudioProcessor::processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiMessages) {
+	// FOR GENERIC UI
+	/*
+	auto* channeldataL = buffer.getWritePointer(0);
+	auto* channeldataR = buffer.getWritePointer(1);
 
-	//// In case we have more outputs than inputs, this code clears any output
-	//// channels that didn't contain input data, (because these aren't
-	//// guaranteed to be empty - they may contain garbage).
-	//// This is here to avoid people getting screaming feedback
-	//// when they first compile a plugin, but obviously you don't need to keep
-	//// this code if your algorithm always overwrites all the output channels.
-	//for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
-	//	buffer.clear(i, 0, buffer.getNumSamples());
+	float gSlider = gain->get();
 
-	//// This is the place where you'd normally do the guts of your plugin's
-	//// audio processing...
-	//// Make sure to reset the state if your inner loop is processing
-	//// the samples and the outer loop is handling the channels.
-	//// Alternatively, you can process the samples with the channels
-	//// interleaved by keeping the same state.
-	//for (int channel = 0; channel < totalNumInputChannels; ++channel)
-	//{
-	//	auto* channelData = buffer.getWritePointer(channel);
+	for (int i = 0; i < buffer.getNumSamples(); i++) {
+		auto inputL = channeldataL[i];
+		auto inputR = channeldataR[i];
 
-	//	// ..do something to the data...
-	//}
-	buffer.clear();
-	MidiBuffer processedMidi;
-	int time;
-	MidiMessage m;
-	for (MidiBuffer::Iterator i(midiMessages); i.getNextEvent(m, time);)
-	{
-		if (m.isNoteOn())
-		{
-			uint8 newVel = (uint8)noteOnVel;
-			m = MidiMessage::noteOn(m.getChannel(), m.getNoteNumber(), newVel);
-		}
-		else if (m.isNoteOff())
-		{
-		}
-		else if (m.isAftertouch())
-		{
-		}
-		else if (m.isPitchWheel())
-		{
-		}
-		processedMidi.addEvent(m, time);
+		inputL = inputL * gSlider;
+		inputR = inputR * gSlider;
+
+		channeldataL[i] = inputL;
+		channeldataR[i] = inputR;
 	}
-	midiMessages.swapWith(processedMidi);
+	*/
+	for (int channel = 0; channel < buffer.getNumChannels(); ++channel) {
+		auto* channelData = buffer.getWritePointer(channel);
+
+		for (int i = 0; i < buffer.getNumSamples(); ++i) {
+			auto input = channelData[i];
+			auto cleanOut = channelData[i];
+
+			// Default (Auto)
+			if (menuChoice == 1) {
+				input = input;
+			}
+
+			// Sine Wave
+			if (menuChoice == 2) {
+				if (input > thresh) {
+					input = 1.0f - expf(-input);
+				}
+				else {
+					input = -1.0f + expf(input);
+				}
+			}
+
+			// Custom Option?
+			if (menuChoice == 3) {
+				if (input > thresh) {
+					input = input;
+				}
+				else {
+					input = 0;
+				}
+			}
+
+			channelData[i] = ((1 - mix) * cleanOut) + (mix * input);
+		}
+	}
 }
 
 //==============================================================================
@@ -190,6 +196,7 @@ bool WavePoolAudioProcessor::hasEditor() const
 AudioProcessorEditor* WavePoolAudioProcessor::createEditor()
 {
 	return new WavePoolAudioProcessorEditor(*this);
+	// return new GenericAudioProcessorEditor(this);
 }
 
 //==============================================================================
