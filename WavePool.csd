@@ -98,9 +98,20 @@ instr 1
 ;    a1 loscil p5, p4, 1
 ;    a1 loscil p5, p4, 3
     a1 poscil p5, p4, 3
-;    prints "%d", p4
-;    al osciln 1, 
-    outs a1, a1
+    iAtt chnget "att"
+    iDec chnget "dec"
+    iSus chnget "sus"
+    iRel chnget "rel"
+    kRes chnget "res"
+    kCutOff chnget "cutoff"
+    kLFOFreq chnget "LFOFreq"
+    kAmp chnget "amp"
+    
+    kEnv madsr iAtt, iDec, iSus, iRel 
+    aLP moogladder a1, kLFOFreq*kCutOff, kRes
+    
+    outs kAmp*(aLP*kEnv), kAmp*(aLP*kEnv)
+
 
 endin
 
@@ -109,7 +120,6 @@ endin
 <CsScore>
 ; table that samples are written to..
 f1 0 4096 7 0
-f 2 0 128 -23 "spectrum.txt"
 ;f 111 0 16 10 1 
 
 ; table to apply fade to samples
