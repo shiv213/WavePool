@@ -53,6 +53,15 @@ endop
 ; will write 4096 samples to function table 1
 
 instr 200
+    giRaw ftgen 4, 0, 4096, -23, "raw.txt"
+    iindex = 0
+    begin_loop:
+        ivalue tab_i iindex, giRaw
+        prints "%d:\t%f\n", iindex, ivalue
+        iindex = iindex + 1
+    if (iindex < ftlen(giRaw)) igoto begin_loop
+    
+    
     p3 = filelen("pianoMood.wav")
     a1, a2 diskin2 "pianoMood.wav", 1, 0, 1
     TableWrite a1, chnget:k("write"), 4096, 1
