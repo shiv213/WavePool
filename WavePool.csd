@@ -9,14 +9,10 @@ rslider bounds(12, 90, 70, 70), channel("cutoff"), range(0, 22000, 2000, 0.5, 0.
 rslider bounds(90, 90, 70, 70), channel("res"), range(0, 1, 0.7, 1, 0.01), text("Resonance") colour(255, 255, 255, 255) textcolour(255, 255, 255, 255) trackercolour(19, 161, 255, 255)
 rslider bounds(168, 90, 70, 70), channel("LFOFreq"), range(0, 10, 0, 1, 0.01), text("LFO Freq") textcolour(255, 255, 255, 255) trackercolour(19, 161, 255, 255)
 rslider bounds(246, 90, 70, 70), channel("amp"), range(0, 1, 0.7, 1, 0.01), text("Amp") textcolour(255, 255, 255, 255) trackercolour(19, 161, 255, 255)
-csoundoutput bounds(12, 170, 483, 85)
-
-button bounds(498, 215, 91, 40) text("Write Data")
-filebutton bounds(498, 170, 90, 40)
-
-
-csoundoutput bounds(452, 76, 400, 200)
-signaldisplay bounds(324, 12, 264, 148)
+csoundoutput bounds(12, 168, 483, 40)
+button bounds(498, 168, 90, 40) text("Write to table", "Write to table"), channel("write") value(1)
+gentable bounds(324, 12, 264, 148), identchannel("widgetIdent"), tablenumber(1) fill(0) tablecolour:0(0, 82, 255, 255)
+hslider bounds(12, 212, 576, 50) range(0, 1, 0.5, 1, 0.001), channel("traverse") trackercolour(19, 161, 255, 255)
 </Cabbage>
 <CsoundSynthesizer>
 <CsOptions>

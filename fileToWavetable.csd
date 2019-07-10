@@ -16,6 +16,7 @@ nchnls = 2
 0dbfs = 1
 
 giEmpty ftgen 3, 0, -256, 2, 0
+giRaw ftgen 4, 0, -4096, 2, 0
 
 ; simple UDO that will write the incoming audio stream
 ; to a function table when triggered..
@@ -41,6 +42,7 @@ endop
 
 ; always playing instrument. Pressing the "Write to table" button
 ; will write 4096 samples to function table 1
+
 instr 200
     p3 = filelen("pianoMood.wav")
     a1, a2 diskin2 "pianoMood.wav", 1, 0, 1
@@ -52,7 +54,7 @@ endin
 instr 1
     iTraverse chnget "traverse"
     SIdentifier init ""
-    SIdent sprintf "samplerange(%f, %d) ", iTraverse*4096-256, iTraverse*4096+256
+    SIdent sprintf "samplerange(%f, %d) ", iTraverse*4096-128, iTraverse*4096+128
     SIdentifier strcat SIdentifier, SIdent
     SIdentifier strcat SIdentifier, "tablenumber(1)"
 
@@ -63,11 +65,13 @@ instr 1
 ;    kndx line 0, p3, 1
 ;    kfreq table iTraverse, 1, 1
 ;    ares tablera 1, iTraverse*4096-8, 16
-
-    indx table iTraverse*4096, 1
+    indx init 0
+    ival table iTraverse*4096, 1
+;    ival2 table iTraverse*4096+256, 1
     loop:
-        ivalue tab_i indx, 1
+        ivalue tab_i iTraverse*3840+indx, 1
         tabw_i ivalue, indx, 3
+;        tableiw ivalue, indx, 3
     loop_lt indx, 1, 256, loop
 
     iindex = 0
@@ -77,15 +81,18 @@ instr 1
         iindex = iindex + 1
     if (iindex < ftlen(3)) igoto begin_loop
 
+    prints "%d", iTraverse*100
+
 ;    prints "Index %d = %f%n", iTraverse*4096, ival
     
 ;    printk2 kfreq
 ;    a1 loscil p5, p4, 1
-;    a1 oscil 1, p4, 1
-    a1 poscil 1, p4, 3
+;    a1 loscil p5, p4, 3
+    a1 poscil p5, p4, 3
 ;    prints "%d", p4
 ;    al osciln 1, 
     outs a1, a1
+
 endin
 
 

@@ -1,7 +1,7 @@
 <Cabbage>
 form caption("SerialRead") size(400, 300), colour(58, 110, 182), pluginid("def1")
 keyboard bounds(12, 166, 381, 95)
-button bounds(16, 18, 80, 40), text("Write to table"), channel("write")
+;button bounds(16, 18, 80, 40), text("Write to table"), channel("write")
 </Cabbage>
 <CsoundSynthesizer>
 <CsOptions>
@@ -13,7 +13,6 @@ button bounds(16, 18, 80, 40), text("Write to table"), channel("write")
 ; -o serialRead.wav -W ;;; for file output any platform
 </CsOptions>
 <CsInstruments>
-
 sr  = 44100
 ksmps = 500 ; the default krate can be too fast for the arduino to handle
 nchnls = 2
@@ -21,19 +20,17 @@ nchnls = 2
 
 instr 1
 
-iPort serialBegin "COM6", 115200			;connect to the arduino with baudrate = 9600
-
+iPort serialBegin "\\\\.\\COM14", 115200			;connect to the arduino with baudrate = 9600
+prints "%f", iPort
 kGain init 16							;read our knob value
 kVal serialRead iPort
-if (kVal != -1) then
-    kGain = kVal/128
-endif
+printk2 kVal
 
 aSig in								;get our audio input and get its rms
 kRms rms aSig*kGain
 
-kRms = kRms*kRms*255						;scale the rms to a good value for the LED and send it out
-serialWrite iPort, (kRms < 255 ? kRms : 255)			;must be in range: 0-255
+;kRms = kRms*kRms*255						;scale the rms to a good value for the LED and send it out
+;serialWrite iPort, (kRms < 255 ? kRms : 255)			;must be in range: 0-255
 
 endin
 </CsInstruments>
