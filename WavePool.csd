@@ -9,9 +9,9 @@ rslider bounds(12, 90, 70, 70), channel("cutoff"), range(0, 22000, 2000, 0.5, 0.
 rslider bounds(90, 90, 70, 70), channel("res"), range(0, 1, 0.7, 1, 0.01), text("Resonance") colour(255, 255, 255, 255) textcolour(255, 255, 255, 255) trackercolour(19, 161, 255, 255)
 rslider bounds(168, 90, 70, 70), channel("LFOFreq"), range(0, 10, 0, 1, 0.01), text("LFO Freq") textcolour(255, 255, 255, 255) trackercolour(19, 161, 255, 255)
 rslider bounds(246, 90, 70, 70), channel("amp"), range(0, 1, 0.7, 1, 0.01), text("Amp") textcolour(255, 255, 255, 255) trackercolour(19, 161, 255, 255)
-csoundoutput bounds(12, 168, 483, 40)
+csoundoutput bounds(12, 168, 483, 40), channel("outputChn")
 button bounds(498, 168, 90, 40) text("Write to table", "Write to table"), channel("write") value(1)
-gentable bounds(324, 12, 264, 148), identchannel("widgetIdent"), tablenumber(1) fill(0) tablecolour:0(0, 82, 255, 255)
+gentable bounds(324, 12, 264, 148), identchannel("widgetIdent"), tablenumber(4) fill(0) tablecolour:0(0, 82, 255, 255)
 hslider bounds(12, 212, 576, 50) range(0, 1, 0.5, 1, 0.001), channel("traverse") trackercolour(19, 161, 255, 255)
 </Cabbage>
 <CsoundSynthesizer>
@@ -25,47 +25,20 @@ nchnls = 2
 0dbfs = 1
 
 giEmpty ftgen 3, 0, -256, 2, 0
-giRaw ftgen 4, 0, -4096, 2, 0
 
-; simple UDO that will write the incoming audio stream
-; to a function table when triggered..
-opcode TableWrite, 0, akii
-   aSig, kTrig, iTableSize, iTableNum xin
-   
-   kCnt init 0
-   setksmps 1
-   kSig = aSig
-
-   
-   if changed(kTrig) == 1 then
-      printks "Sampling again", 0
-      kCnt = 0
-   endif
-   
-   if kCnt < iTableSize then
-      tablew kSig, kCnt, iTableNum
-      printk2 kSig
-      kCnt +=1
-   endif
-endop 
-
-; always playing instrument. Pressing the "Write to table" button
-; will write 4096 samples to function table 1
+;    iindex = 0
+;    begin_loop:
+;        ivalue tab_i iindex, giRaw
+;        prints "%d:\t%f\n", iindex, ivalue
+;        iindex = iindex + 1
+;    if (iindex < ftlen(giRaw)) igoto begin_loop
 
 instr 200
+    p3 = 4096
+    
+    printks "Sampling again", 0
     giRaw ftgen 4, 0, 4096, -23, "raw.txt"
-    iindex = 0
-    begin_loop:
-        ivalue tab_i iindex, giRaw
-        prints "%d:\t%f\n", iindex, ivalue
-        iindex = iindex + 1
-    if (iindex < ftlen(giRaw)) igoto begin_loop
-    
-    
-    p3 = filelen("pianoMood.wav")
-    a1, a2 diskin2 "pianoMood.wav", 1, 0, 1
-    TableWrite a1, chnget:k("write"), 4096, 1
-    chnset	"tablenumber(1)", "widgetIdent"
+    chnset	"tablenumber(3)", "widgetIdent"
 endin
 
 ;instrument will be triggered by keyboard widget
@@ -74,20 +47,13 @@ instr 1
     SIdentifier init ""
     SIdent sprintf "samplerange(%f, %d) ", iTraverse*4096-128, iTraverse*4096+128
     SIdentifier strcat SIdentifier, SIdent
-    SIdentifier strcat SIdentifier, "tablenumber(1)"
+    SIdentifier strcat SIdentifier, "tablenumber(3)"
 
     ;send identifier string to Cabbage
     chnset SIdentifier, "widgetIdent"
-    kEnv madsr .1, .2, .6, .4
-
-;    kndx line 0, p3, 1
-;    kfreq table iTraverse, 1, 1
-;    ares tablera 1, iTraverse*4096-8, 16
     indx init 0
-    ival table iTraverse*4096, 1
-;    ival2 table iTraverse*4096+256, 1
     loop:
-        ivalue tab_i iTraverse*3840+indx, 1
+        ivalue tab_i iTraverse*3840+indx, 4
         tabw_i ivalue, indx, 3
 ;        tableiw ivalue, indx, 3
     loop_lt indx, 1, 256, loop
