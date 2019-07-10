@@ -1,6 +1,6 @@
 <Cabbage> bounds(0, 0, 0, 0)
 form caption("WavePool") size(600, 400), colour(128, 197, 242), pluginid("def1")
-keyboard bounds(12, 267, 576, 121)
+keyboard bounds(12, 266, 576, 121)
 rslider bounds(12, 12, 70, 70), channel("att"), range(0, 1, 0.01, 1, 0.01), text("Attack") textcolour(255, 255, 255, 255) trackercolour(19, 161, 255, 255)
 rslider bounds(90, 12, 70, 70), channel("dec"), range(0, 1, 0.5, 1, 0.01), text("Decay") textcolour(255, 255, 255, 255) trackercolour(19, 161, 255, 255)
 rslider bounds(168, 12, 70, 70), channel("sus"), range(0, 1, 0.5, 1, 0.01), text("Sustain") textcolour(255, 255, 255, 255) trackercolour(19, 161, 255, 255)
@@ -9,14 +9,14 @@ rslider bounds(12, 90, 70, 70), channel("cutoff"), range(0, 22000, 2000, 0.5, 0.
 rslider bounds(90, 90, 70, 70), channel("res"), range(0, 1, 0.7, 1, 0.01), text("Resonance") colour(255, 255, 255, 255) textcolour(255, 255, 255, 255) trackercolour(19, 161, 255, 255)
 rslider bounds(168, 90, 70, 70), channel("LFOFreq"), range(0, 10, 0, 1, 0.01), text("LFO Freq") textcolour(255, 255, 255, 255) trackercolour(19, 161, 255, 255)
 rslider bounds(246, 90, 70, 70), channel("amp"), range(0, 1, 0.7, 1, 0.01), text("Amp") textcolour(255, 255, 255, 255) trackercolour(19, 161, 255, 255)
-csoundoutput bounds(12, 168, 483, 40), channel("outputChn")
-button bounds(498, 168, 90, 40) text("Write to table", "Write to table"), channel("write") value(1)
-gentable bounds(324, 12, 264, 148), identchannel("widgetIdent"), tablenumber(4) fill(0) tablecolour:0(0, 82, 255, 255)
-hslider bounds(12, 212, 576, 50) range(0, 1, 0.5, 1, 0.001), channel("traverse") trackercolour(19, 161, 255, 255)
+
+button bounds(11, 168, 305, 40) text("Write to table", "Write to table"), channel("write") value(1)
+gentable bounds(324, 12, 264, 196), identchannel("widgetIdent"), tablenumber(4)  samplerange(0, 4096) fill(0) tablecolour:0(0, 82, 255, 255)
+hslider bounds(12, 212, 576, 50) range(0, 1, 0.473, 1, 0.001), channel("traverse") trackercolour(19, 161, 255, 255)
 </Cabbage>
 <CsoundSynthesizer>
 <CsOptions>
--n -d -+rtmidi=NULL -M0 -m0d --midi-key-cps=4 --midi-velocity-amp=5
+-n -d -+rtmidi=NULL -M0 -m0d --midi-key-cps=4 --midi-velocity-amp=5 -odac
 </CsOptions>
 <CsInstruments>
 ; Initialize the global variables. 
@@ -36,9 +36,16 @@ giEmpty ftgen 3, 0, -256, 2, 0
 instr 200
     p3 = 4096
     
-    printks "Sampling again", 0
-    giRaw ftgen 4, 0, 4096, -23, "raw.txt"
-    chnset	"tablenumber(3)", "widgetIdent"
+;    printks "Sampling again", 0
+    giRaw ftgen 2, 0, 4096, -23, "raw.txt"
+    giPost ftgen 4, 0, -4096, 2, 0
+    indx init 0
+    loop:
+        ivalue tab_i indx, 2
+        tabw_i ivalue-128, indx, 4
+    loop_lt indx, 1, 4096, loop
+    
+    chnset	"tablenumber(4)", "widgetIdent"
 endin
 
 ;instrument will be triggered by keyboard widget
@@ -55,7 +62,6 @@ instr 1
     loop:
         ivalue tab_i iTraverse*3840+indx, 4
         tabw_i ivalue, indx, 3
-;        tableiw ivalue, indx, 3
     loop_lt indx, 1, 256, loop
 
     iindex = 0
@@ -66,7 +72,7 @@ instr 1
     if (iindex < ftlen(3)) igoto begin_loop
 
     prints "%d", iTraverse*100
-
+    
 ;    prints "Index %d = %f%n", iTraverse*4096, ival
     
 ;    printk2 kfreq
