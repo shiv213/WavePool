@@ -7,7 +7,7 @@ rslider bounds(168, 12, 70, 70), channel("sus"), range(0, 1, 0.5, 1, 0.01), text
 rslider bounds(246, 12, 70, 70), channel("rel"), range(0, 1, 0.7, 1, 0.01), text("Release") textcolour(255, 255, 255, 255) trackercolour(19, 161, 255, 255)
 rslider bounds(12, 90, 70, 70), channel("cutoff"), range(0, 22000, 2000, 0.5, 0.01), text("Cut-Off") textcolour(255, 255, 255, 255) trackercolour(19, 161, 255, 255)
 rslider bounds(90, 90, 70, 70), channel("res"), range(0, 1, 0.7, 1, 0.01), text("Resonance") colour(255, 255, 255, 255) textcolour(255, 255, 255, 255) trackercolour(19, 161, 255, 255)
-rslider bounds(168, 90, 70, 70), channel("LFOFreq"), range(0, 10, 0, 1, 0.01), text("LFO Freq") textcolour(255, 255, 255, 255) trackercolour(19, 161, 255, 255)
+rslider bounds(168, 90, 70, 70), channel("LFOFreq"), range(0, 10, 3.14, 1, 0.01), text("LFO Freq") textcolour(255, 255, 255, 255) trackercolour(19, 161, 255, 255)
 rslider bounds(246, 90, 70, 70), channel("amp"), range(0, 1, 0.7, 1, 0.01), text("Amp") textcolour(255, 255, 255, 255) trackercolour(19, 161, 255, 255)
 
 button bounds(11, 168, 305, 40) text("Write to table", "Write to table"), channel("write") value(1)
@@ -33,29 +33,35 @@ giEmpty ftgen 3, 0, -256, 2, 0
 ;        iindex = iindex + 1
 ;    if (iindex < ftlen(giRaw)) igoto begin_loop
 
+instr 2
+    ires system_i 1,{{start "" getData.exe}},1
+endin
+
+
 instr 200
     p3 = 4096
-    
-;    printks "Sampling again", 0
+    kTrig chnget "write"
+;   if changed(kTrig) == 1 then
     giRaw ftgen 2, 0, 4096, -23, "raw.txt"
     giPost ftgen 4, 0, -4096, 2, 0
     indx init 0
     loop:
         ivalue tab_i indx, 2
-        tabw_i ivalue-200, indx, 4
+        tabw_i ivalue/384-.4, indx, 4
     loop_lt indx, 1, 4096, loop
-    
-    chnset	"tablenumber(4)", "widgetIdent"
+;    endif
+
+;    printks "Sampling again", 0
+
 endin
 
 ;instrument will be triggered by keyboard widget
 instr 1
     iTraverse chnget "traverse"
     SIdentifier init ""
-    SIdent sprintf "samplerange(%f, %d) ", iTraverse*4096-128, iTraverse*4096+128
+    SIdent sprintf "samplerange(%f, %d) ", iTraverse*4096-32, iTraverse*4096+32
     SIdentifier strcat SIdentifier, SIdent
     SIdentifier strcat SIdentifier, "tablenumber(3)"
-
     ;send identifier string to Cabbage
     chnset SIdentifier, "widgetIdent"
     indx init 0
@@ -109,6 +115,7 @@ f99 0 4096 7 0 48 1 4000 1 48 0
 ;f99 0 4096 7 0
 
 i200 0 z
+i2 1 0 1
 f0 z
 </CsScore>
 </CsoundSynthesizer>
