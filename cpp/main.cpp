@@ -1,9 +1,9 @@
-#include <stdio.h>
-#include <tchar.h>
+//#include <stdio.h>
+//#include <tchar.h>
 #include "SerialClass.h"
 #include <string>
 #include <iostream>
-#include <string.h>
+//#include <string.h>
 #include <fstream>
 #include <algorithm>
 
@@ -31,8 +31,6 @@ int main() {
     myfile << ans;
     myfile << ans;
     myfile << ans;
-
-
     myfile.close();
     return 0;
 }

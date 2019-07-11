@@ -42,7 +42,7 @@ instr 200
     indx init 0
     loop:
         ivalue tab_i indx, 2
-        tabw_i ivalue-128, indx, 4
+        tabw_i ivalue-200, indx, 4
     loop_lt indx, 1, 4096, loop
     
     chnset	"tablenumber(4)", "widgetIdent"
@@ -63,7 +63,8 @@ instr 1
         ivalue tab_i iTraverse*3840+indx, 4
         tabw_i ivalue, indx, 3
     loop_lt indx, 1, 256, loop
-
+    chnset "tablenumber(3)", "widgetIdent"
+    
     iindex = 0
     begin_loop:
         ivalue tab_i iindex, 3
